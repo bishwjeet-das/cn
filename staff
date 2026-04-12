@@ -1,0 +1,226 @@
+import java.util.*;
+
+// Base Class
+class Staff {
+private int code;
+private String name;
+
+public Staff() {}
+
+public Staff(int code, String name) {
+    this.code = code;
+    this.name = name;
+}
+
+public int getCode() { return code; }
+public void setCode(int code) { this.code = code; }
+
+public String getName() { return name; }
+public void setName(String name) { this.name = name; }
+
+public void display() {
+    System.out.println("Code: " + code);
+    System.out.println("Name: " + name);
+}
+}
+
+// Teacher
+class Teacher extends Staff {
+private String subject;
+private String publication;
+
+public Teacher() {}
+
+public Teacher(int code, String name, String subject, String publication) {
+    super(code, name);
+    this.subject = subject;
+    this.publication = publication;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Subject: " + subject);
+    System.out.println("Publication: " + publication);
+}
+}
+
+// Officer
+class Officer extends Staff {
+private String grade;
+
+public Officer() {}
+
+public Officer(int code, String name, String grade) {
+    super(code, name);
+    this.grade = grade;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Grade: " + grade);
+}
+}
+
+// Typist
+class Typist extends Staff {
+private int speed;
+
+public Typist() {}
+
+public Typist(int code, String name, int speed) {
+    super(code, name);
+    this.speed = speed;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Speed: " + speed);
+}
+}
+
+// Regular Typist
+class RegularTypist extends Typist {
+private double remuneration;
+
+public RegularTypist() {}
+
+public RegularTypist(int code, String name, int speed, double remuneration) {
+    super(code, name, speed);
+    this.remuneration = remuneration;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Remuneration: " + remuneration);
+}
+}
+
+// Casual Typist
+class CasualTypist extends Typist {
+private double dailyWages;
+
+public CasualTypist() {}
+
+public CasualTypist(int code, String name, int speed, double dailyWages) {
+    super(code, name, speed);
+    this.dailyWages = dailyWages;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Daily Wages: " + dailyWages);
+}
+}
+
+// Driver Class
+public class Driver {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+
+    ArrayList<Staff> database = new ArrayList<>();
+
+    int choice;
+
+    do {
+        System.out.println("\n1. Add Employee");
+        System.out.println("2. Search Employee by Code");
+        System.out.println("3. Display All Employees");
+        System.out.println("4. Exit");
+        System.out.print("Enter choice: ");
+        choice = sc.nextInt();
+
+        switch (choice) {
+
+            case 1:
+                System.out.println("\nChoose Type:");
+                System.out.println("1. Teacher  2. Officer  3. Regular Typist  4. Casual Typist");
+                int type = sc.nextInt();
+
+                System.out.print("Enter Code: ");
+                int code = sc.nextInt();
+                sc.nextLine();
+
+                System.out.print("Enter Name: ");
+                String name = sc.nextLine();
+
+                switch (type) {
+                    case 1:
+                        System.out.print("Subject: ");
+                        String sub = sc.nextLine();
+                        System.out.print("Publication: ");
+                        String pub = sc.nextLine();
+
+                        database.add(new Teacher(code, name, sub, pub));
+                        break;
+
+                    case 2:
+                        System.out.print("Grade: ");
+                        String grade = sc.nextLine();
+
+                        database.add(new Officer(code, name, grade));
+                        break;
+
+                    case 3:
+                        System.out.print("Speed: ");
+                        int sp1 = sc.nextInt();
+                        System.out.print("Remuneration: ");
+                        double rem = sc.nextDouble();
+
+                        database.add(new RegularTypist(code, name, sp1, rem));
+                        break;
+
+                    case 4:
+                        System.out.print("Speed: ");
+                        int sp2 = sc.nextInt();
+                        System.out.print("Daily Wages: ");
+                        double wage = sc.nextDouble();
+
+                        database.add(new CasualTypist(code, name, sp2, wage));
+                        break;
+
+                    default:
+                        System.out.println("Invalid type");
+                }
+                break;
+
+            case 2:
+                System.out.print("Enter Code to Search: ");
+                int searchCode = sc.nextInt();
+                boolean found = false;
+
+                for (Staff s : database) {
+                    if (s.getCode() == searchCode) {
+                        s.display();
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    System.out.println("Employee not found!");
+                break;
+
+            case 3:
+                if (database.isEmpty()) {
+                    System.out.println("No records found.");
+                } else {
+                    for (Staff s : database) {
+                        s.display();
+                        System.out.println("-------------------");
+                    }
+                }
+                break;
+
+            case 4:
+                System.out.println("Exiting...");
+                break;
+
+            default:
+                System.out.println("Invalid choice");
+        }
+
+    } while (choice != 4);
+
+    sc.close();
+}
+}

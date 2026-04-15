@@ -1,0 +1,103 @@
+#include <stdio.h>
+
+#define MAX 10
+#define INF 99999
+
+int V;
+
+// Function to print matrix
+void printMatrix(int dist[MAX][MAX], int step) {
+    printf("\nA%d:\n", step);
+    printf("   ");
+    for (int i = 0; i < V; i++)
+        printf("%3d", i + 1);
+    printf("\n");
+
+    for (int i = 0; i < V; i++) {
+        printf("%d  ", i + 1);
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INF)
+                printf("INF ");
+            else
+                printf("%3d ", dist[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to print path
+void printPath(int next[MAX][MAX], int i, int j) {
+    if (next[i][j] == -1) return;
+
+    printf("%d", i + 1);
+    while (i != j) {
+        i = next[i][j];
+        printf(" -> %d", i + 1);
+    }
+}
+
+// Floyd Warshall Function
+void floydWarshall(int graph[MAX][MAX]) {
+    int dist[MAX][MAX], next[MAX][MAX];
+
+    // Initialize
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            dist[i][j] = graph[i][j];
+
+            if (graph[i][j] == INF || i == j)
+                next[i][j] = -1;
+            else
+                next[i][j] = j;
+        }
+    }
+
+    // Floyd Warshall Algorithm
+    for (int k = 0; k < V; k++) {
+
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    next[i][j] = next[i][k];
+                }
+            }
+        }
+
+        // Print intermediate matrix
+        printMatrix(dist, k + 1);
+    }
+
+    // Print Paths
+    printf("\nShortest Paths:\n");
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+
+            if (i != j && dist[i][j] != INF) {
+                printf("%d -> %d : ", i + 1, j + 1);
+                printPath(next, i, j);
+                printf(" : Cost = %d\n", dist[i][j]);
+            }
+        }
+    }
+}
+
+int main() {
+    int graph[MAX][MAX];
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter adjacency matrix (use 99999 for INF):\n");
+
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    floydWarshall(graph);
+
+    return 0;
+}

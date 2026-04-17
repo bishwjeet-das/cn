@@ -1,0 +1,535 @@
+import java.util.Scanner;
+
+
+abstract class ThreeDObject {
+    
+    protected double dim1;
+    protected double dim2;
+    protected double dim3;
+
+    
+    public ThreeDObject(double d1, double d2, double d3) {
+        this.dim1 = d1;
+        this.dim2 = d2;
+        this.dim3 = d3;
+    }
+
+    
+    public abstract double volume();
+    public abstract double wholeSurfaceArea();
+}
+
+
+class Box extends ThreeDObject {
+
+    public Box(double length, double width, double height) {
+        super(length, width, height);
+    }
+
+    @Override
+    public double volume() {
+        return dim1 * dim2 * dim3;
+    }
+
+    @Override
+    public double wholeSurfaceArea() {
+        return 2 * (dim1 * dim2 + dim2 * dim3 + dim1 * dim3);
+    }
+}
+
+
+class Cube extends ThreeDObject {
+
+    public Cube(double side) {
+        super(side, side, side);
+    }
+
+    @Override
+    public double volume() {
+        return dim1 * dim1 * dim1;
+    }
+
+    @Override
+    public double wholeSurfaceArea() {
+        return 6 * dim1 * dim1;
+    }
+}
+
+
+class Cylinder extends ThreeDObject {
+
+    public Cylinder(double radius, double height) {
+        super(radius, height, 0);
+    }
+
+    @Override
+    public double volume() {
+        return Math.PI * dim1 * dim1 * dim2;
+    }
+
+    @Override
+    public double wholeSurfaceArea() {
+        return 2 * Math.PI * dim1 * (dim1 + dim2);
+    }
+}
+
+
+class Cone extends ThreeDObject {
+
+    public Cone(double radius, double height) {
+        super(radius, height, 0);
+    }
+
+    @Override
+    public double volume() {
+        return (1.0 / 3) * Math.PI * dim1 * dim1 * dim2;
+    }
+
+    @Override
+    public double wholeSurfaceArea() {
+        double slantHeight = Math.sqrt(dim1 * dim1 + dim2 * dim2);
+        return Math.PI * dim1 * (dim1 + slantHeight);
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n--- 3D Object Menu ---");
+            System.out.println("1. Box");
+            System.out.println("2. Cube");
+            System.out.println("3. Cylinder");
+            System.out.println("4. Cone");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            ThreeDObject obj = null;
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter length, width, height: ");
+                    double l = sc.nextDouble();
+                    double w = sc.nextDouble();
+                    double h = sc.nextDouble();
+                    obj = new Box(l, w, h);
+                    break;
+
+                case 2:
+                    System.out.print("Enter side: ");
+                    double s = sc.nextDouble();
+                    obj = new Cube(s);
+                    break;
+
+                case 3:
+                    System.out.print("Enter radius and height: ");
+                    double r = sc.nextDouble();
+                    double ch = sc.nextDouble();
+                    obj = new Cylinder(r, ch);
+                    break;
+
+                case 4:
+                    System.out.print("Enter radius and height: ");
+                    double cr = sc.nextDouble();
+                    double hh = sc.nextDouble();
+                    obj = new Cone(cr, hh);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+            if (obj != null) {
+                System.out.println("Volume = " + obj.volume());
+                System.out.println("Surface Area = " + obj.wholeSurfaceArea());
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package Pack1;
+
+public interface Department {
+
+    // Attributes (by default: public static final)
+    String depName = "CSE";
+    String depHead = "Dr. Smith";
+
+    // Abstract methods (by default: public abstract)
+    void getDeptData();
+    void printDeptData();
+}
+
+
+
+package Pack1;
+
+import java.util.Scanner;
+
+public class Hostel {
+
+    protected String hostelName;
+    protected String hostelLocation;
+    protected int noOfRooms;
+
+    public void getHostelData() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Hostel Name: ");
+        hostelName = sc.nextLine();
+
+        System.out.print("Enter Hostel Location: ");
+        hostelLocation = sc.nextLine();
+
+        System.out.print("Enter Number of Rooms: ");
+        noOfRooms = sc.nextInt();
+    }
+
+    public void printHostelData() {
+        System.out.println("Hostel Name: " + hostelName);
+        System.out.println("Hostel Location: " + hostelLocation);
+        System.out.println("Number of Rooms: " + noOfRooms);
+    }
+}
+
+
+
+
+package Pack1;
+
+import java.util.Scanner;
+
+public class Student extends Hostel implements Department {
+
+    private String studentName;
+    private int regNo;
+    private String electiveSubject;
+    private double avgMarks;
+
+    // Implement Department methods
+    @Override
+    public void getDeptData() {
+        System.out.println("Department Name: " + depName);
+        System.out.println("Department Head: " + depHead);
+    }
+
+    @Override
+    public void printDeptData() {
+        System.out.println("Department Name: " + depName);
+        System.out.println("Department Head: " + depHead);
+    }
+
+    // Student methods
+    public void getStudentData() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Student Name: ");
+        studentName = sc.nextLine();
+
+        System.out.print("Enter Registration Number: ");
+        regNo = sc.nextInt();
+        sc.nextLine(); // consume newline
+
+        System.out.print("Enter Elective Subject: ");
+        electiveSubject = sc.nextLine();
+
+        System.out.print("Enter Average Marks: ");
+        avgMarks = sc.nextDouble();
+    }
+
+    public void printStudentData() {
+        System.out.println("Student Name: " + studentName);
+        System.out.println("Registration No: " + regNo);
+        System.out.println("Elective Subject: " + electiveSubject);
+        System.out.println("Average Marks: " + avgMarks);
+    }
+
+    // Combined display method (optional but useful)
+    public void displayAll() {
+        printStudentData();
+        printHostelData();
+        printDeptData();
+    }
+}
+
+
+import Pack1.Student;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Student s = new Student();
+
+        // Input
+        s.getStudentData();
+        s.getHostelData();
+
+        // Department info (fixed)
+        s.getDeptData();
+
+        // Output
+        System.out.println("\n--- Student Details ---");
+        s.displayAll();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+import java.util.*;
+
+// Base Class
+class Staff {
+private int code;
+private String name;
+
+public Staff() {}
+
+public Staff(int code, String name) {
+    this.code = code;
+    this.name = name;
+}
+
+public int getCode() { return code; }
+public void setCode(int code) { this.code = code; }
+
+public String getName() { return name; }
+public void setName(String name) { this.name = name; }
+
+public void display() {
+    System.out.println("Code: " + code);
+    System.out.println("Name: " + name);
+}
+}
+
+// Teacher
+class Teacher extends Staff {
+private String subject;
+private String publication;
+
+public Teacher() {}
+
+public Teacher(int code, String name, String subject, String publication) {
+    super(code, name);
+    this.subject = subject;
+    this.publication = publication;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Subject: " + subject);
+    System.out.println("Publication: " + publication);
+}
+}
+
+// Officer
+class Officer extends Staff {
+private String grade;
+
+public Officer() {}
+
+public Officer(int code, String name, String grade) {
+    super(code, name);
+    this.grade = grade;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Grade: " + grade);
+}
+}
+
+// Typist
+class Typist extends Staff {
+private int speed;
+
+public Typist() {}
+
+public Typist(int code, String name, int speed) {
+    super(code, name);
+    this.speed = speed;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Speed: " + speed);
+}
+}
+
+// Regular Typist
+class RegularTypist extends Typist {
+private double remuneration;
+
+public RegularTypist() {}
+
+public RegularTypist(int code, String name, int speed, double remuneration) {
+    super(code, name, speed);
+    this.remuneration = remuneration;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Remuneration: " + remuneration);
+}
+}
+
+// Casual Typist
+class CasualTypist extends Typist {
+private double dailyWages;
+
+public CasualTypist() {}
+
+public CasualTypist(int code, String name, int speed, double dailyWages) {
+    super(code, name, speed);
+    this.dailyWages = dailyWages;
+}
+
+public void display() {
+    super.display();
+    System.out.println("Daily Wages: " + dailyWages);
+}
+}
+
+// Driver Class
+public class Driver {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+
+    ArrayList<Staff> database = new ArrayList<>();
+
+    int choice;
+
+    do {
+        System.out.println("\n1. Add Employee");
+        System.out.println("2. Search Employee by Code");
+        System.out.println("3. Display All Employees");
+        System.out.println("4. Exit");
+        System.out.print("Enter choice: ");
+        choice = sc.nextInt();
+
+        switch (choice) {
+
+            case 1:
+                System.out.println("\nChoose Type:");
+                System.out.println("1. Teacher  2. Officer  3. Regular Typist  4. Casual Typist");
+                int type = sc.nextInt();
+
+                System.out.print("Enter Code: ");
+                int code = sc.nextInt();
+                sc.nextLine();
+
+                System.out.print("Enter Name: ");
+                String name = sc.nextLine();
+
+                switch (type) {
+                    case 1:
+                        System.out.print("Subject: ");
+                        String sub = sc.nextLine();
+                        System.out.print("Publication: ");
+                        String pub = sc.nextLine();
+
+                        database.add(new Teacher(code, name, sub, pub));
+                        break;
+
+                    case 2:
+                        System.out.print("Grade: ");
+                        String grade = sc.nextLine();
+
+                        database.add(new Officer(code, name, grade));
+                        break;
+
+                    case 3:
+                        System.out.print("Speed: ");
+                        int sp1 = sc.nextInt();
+                        System.out.print("Remuneration: ");
+                        double rem = sc.nextDouble();
+
+                        database.add(new RegularTypist(code, name, sp1, rem));
+                        break;
+
+                    case 4:
+                        System.out.print("Speed: ");
+                        int sp2 = sc.nextInt();
+                        System.out.print("Daily Wages: ");
+                        double wage = sc.nextDouble();
+
+                        database.add(new CasualTypist(code, name, sp2, wage));
+                        break;
+
+                    default:
+                        System.out.println("Invalid type");
+                }
+                break;
+
+            case 2:
+                System.out.print("Enter Code to Search: ");
+                int searchCode = sc.nextInt();
+                boolean found = false;
+
+                for (Staff s : database) {
+                    if (s.getCode() == searchCode) {
+                        s.display();
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    System.out.println("Employee not found!");
+                break;
+
+            case 3:
+                if (database.isEmpty()) {
+                    System.out.println("No records found.");
+                } else {
+                    for (Staff s : database) {
+                        s.display();
+                        System.out.println("-------------------");
+                    }
+                }
+                break;
+
+            case 4:
+                System.out.println("Exiting...");
+                break;
+
+            default:
+                System.out.println("Invalid choice");
+        }
+
+    } while (choice != 4);
+
+    sc.close();
+}
+}

@@ -3,7 +3,7 @@
 
 #define MAX 100
 
-// Function to print optimal parenthesization
+
 void printOptimalParenthesis(int s[MAX][MAX], int i, int j) {
     if (i == j) {
         printf("A%d", i);
@@ -20,7 +20,7 @@ void printOptimalParenthesis(int s[MAX][MAX], int i, int j) {
     }
 }
 
-// Function to find minimum multiplication cost
+
 int MatrixChainOrder(int p[], int n) {
 
     int m[MAX][MAX];
@@ -33,7 +33,7 @@ int MatrixChainOrder(int p[], int n) {
         m[i][i] = 0;
     }
 
-    // L is chain length
+    
     for (L = 2; L < n; L++) {
 
         for (i = 1; i < n - L + 1; i++) {
@@ -48,7 +48,7 @@ int MatrixChainOrder(int p[], int n) {
                 q = m[i][k] + m[k + 1][j]
                     + p[i - 1] * p[k] * p[j];
 
-                // Update minimum cost
+                
                 if (q < m[i][j]) {
                     m[i][j] = q;
                     s[i][j] = k;

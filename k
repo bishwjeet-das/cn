@@ -1,87 +1,131 @@
-#include <stdio.h>
 #include <limits.h>
-
-#define MAX 100
-
-
-void printOptimalParenthesis(int s[MAX][MAX], int i, int j) {
-    if (i == j) {
+#include<stdio.h>
+int m[20][20], s[20][20];
+void printOptimal(int i, int j)
+{
+    if (i == j)
+    {
         printf("A%d", i);
-    } else {
+    }
+    else
+    {
         printf("(");
-
-        // Print left side
-        printOptimalParenthesis(s, i, s[i][j]);
-
-        // Print right side
-        printOptimalParenthesis(s, s[i][j] + 1, j);
-
+        printOptimal(i, s[i][j]);
+        printOptimal(s[i][j] + 1, j);
         printf(")");
     }
 }
-
-
-int MatrixChainOrder(int p[], int n) {
-
-    int m[MAX][MAX];
-    int s[MAX][MAX];
-
+void matrixChainOrder(int p[], int n)
+{
     int i, j, k, L, q;
 
-    // Initialize diagonal elements as 0
-    for (i = 1; i < n; i++) {
+
+    for (i = 1; i <= n; i++)
         m[i][i] = 0;
-    }
-
-    
-    for (L = 2; L < n; L++) {
-
-        for (i = 1; i < n - L + 1; i++) {
-
+    for (L = 2; L <= n; L++)
+    {
+        for (i = 1; i <= n - L + 1; i++)
+        {
             j = i + L - 1;
-
             m[i][j] = INT_MAX;
 
-            for (k = i; k <= j - 1; k++) {
-
-                // Cost calculation
+            for (k = i; k < j; k++)
+            {
                 q = m[i][k] + m[k + 1][j]
                     + p[i - 1] * p[k] * p[j];
 
-                
-                if (q < m[i][j]) {
+                if (q < m[i][j])
+                {
                     m[i][j] = q;
                     s[i][j] = k;
                 }
             }
         }
     }
+    printf("\n                    DP COST MATRIX (m)\n\n");
+    printf("%8s", "");
 
-    printf("\nOptimal Parenthesization is: ");
-    printOptimalParenthesis(s, 1, n - 1);
-
-    printf("\nMinimum number of scalar multiplications = %d\n",
-           m[1][n - 1]);
-
-    return m[1][n - 1];
-}
-
-int main() {
-
-    int n, i;
-
-    printf("Enter number of matrices: ");
-    scanf("%d", &n);
-
-    int p[n + 1];
-
-    printf("Enter dimensions array:\n");
-
-    for (i = 0; i <= n; i++) {
-        scanf("%d", &p[i]);
+    for (j = 1; j <= n; j++)
+    {
+        char col[10];
+        sprintf(col, "A%d", j);
+        printf("%8s", col);
     }
 
-    MatrixChainOrder(p, n + 1);
+    printf("\n");
+    for (i = 1; i <= n; i++)
+    {
+        char row[10];
+        sprintf(row, "A%d", i);
 
+        printf("%8s", row);
+
+        for (j = 1; j <= n; j++)
+        {
+            if (j < i)
+                printf("%8s", "-");
+            else
+                printf("%8d", m[i][j]);
+        }
+
+        printf("\n");
+    }
+    printf("\n                         K MATRIX (s)\n\n6");
+    printf("%8s", "");
+
+    for (j = 1; j <= n; j++)
+    {
+        char col[10];
+        sprintf(col, "A%d", j);
+        printf("%8s", col);
+    }
+
+    printf("\n");
+    for (i = 1; i <= n; i++)
+    {
+        char row[10];
+        sprintf(row, "A%d", i);
+
+        printf("%8s", row);
+
+        for (j = 1; j <= n; j++)
+        {
+            if (j <= i)
+                printf("%8s", "-");
+            else
+                printf("%8d", s[i][j]);
+        }
+
+        printf("\n");
+    }
+    printf("\n                 OPTIMAL PARENTHESIZATION\n\n");
+    printf("Order : ");
+    printOptimal(1, n);
+
+    printf("\n\nMinimum Scalar Multiplications = %d\n", m[1][n]);
+}
+
+int main()
+{
+    int n;
+
+  
+    printf("            MATRIX CHAIN MULTIPLICATION PROGRAM\n");
+    printf("\nEnter number of matrices : ");
+    scanf("%d", &n);
+    int p[n + 1];
+    printf("\nEnter dimensions of matrices:\n");
+    for (int i = 1; i <= n; i++)
+    {
+        int row, col;
+
+        printf("Enter dimensions of A%d : ", i);
+        scanf("%d %d", &row, &col);
+
+        if (i == 1)
+            p[0] = row;
+        p[i] = col;
+    }
+    matrixChainOrder(p, n);
     return 0;
 }

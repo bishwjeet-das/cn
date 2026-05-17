@@ -1,0 +1,468 @@
+
+class PingThread extends Thread {
+
+    
+    private String message;
+
+    
+    public PingThread() {
+        message = "Ping";
+    }
+
+    
+    public PingThread(String message) {
+        this.message = message;
+    }
+
+ 
+    public String getMessage() {
+        return message;
+    }
+
+   
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+   
+    public void run() {
+
+        try {
+
+            while (true) {
+
+                
+                int randomSpace = (int) (Math.random() * 20);
+
+                for (int i = 0; i < randomSpace; i++) {
+                    System.out.print(" ");
+                }
+
+                System.out.println(message);
+
+                
+                Thread.sleep(1000);
+            }
+
+        } catch (InterruptedException e) {
+
+            System.out.println("Ping Thread Interrupted");
+        }
+    }
+}
+
+
+class PongThread extends Thread {
+
+    
+    private String message;
+
+    
+    public PongThread() {
+        message = "PONG";
+    }
+
+    
+    public PongThread(String message) {
+        this.message = message;
+    }
+
+    
+    public String getMessage() {
+        return message;
+    }
+
+    
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    
+    public void run() {
+
+        try {
+
+            while (true) {
+
+               
+                int randomSpace = (int) (Math.random() * 20);
+
+                for (int i = 0; i < randomSpace; i++) {
+                    System.out.print(" ");
+                }
+
+                System.out.println(message);
+
+                
+                Thread.sleep(1000);
+            }
+
+        } catch (InterruptedException e) {
+
+            System.out.println("PONG Thread Interrupted");
+        }
+    }
+}
+
+
+public class p {
+
+    public static void main(String[] args) {
+
+        
+        PingThread pingObject = new PingThread();
+
+        PongThread pongObject = new PongThread();
+
+        
+        pingObject.start();
+
+        pongObject.start();
+    }
+}
+
+============================================================
+
+class Buffer {
+
+   
+    private int data;
+    private boolean available = false;
+
+    
+    public Buffer() {
+
+    }
+
+    
+    public Buffer(int data, boolean available) {
+        this.data = data;
+        this.available = available;
+    }
+
+    
+    public int getData() {
+        return data;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+   
+    public void setData(int data) {
+        this.data = data;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+   
+    public synchronized void produce(int value) {
+
+        try {
+
+            
+            while (available) {
+                wait();
+            }
+
+            data = value;
+
+            System.out.println("Produced : " + data);
+
+            available = true;
+
+          
+            notify();
+
+        } catch (InterruptedException e) {
+
+            System.out.println("Producer Interrupted");
+        }
+    }
+
+    
+    public synchronized void consume() {
+
+        try {
+
+            
+            while (!available) {
+                wait();
+            }
+
+            System.out.println("Consumed : " + data);
+
+            available = false;
+
+           
+            notify();
+
+        } catch (InterruptedException e) {
+
+            System.out.println("Consumer Interrupted");
+        }
+    }
+}
+
+
+class Producer extends Thread {
+
+   
+    private Buffer buffer;
+
+    
+    public Producer() {
+
+    }
+
+   
+    public Producer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+   
+    public Buffer getBuffer() {
+        return buffer;
+    }
+
+   
+    public void setBuffer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    
+    public void run() {
+
+        try {
+
+            for (int i = 1; i <= 5; i++) {
+
+                buffer.produce(i);
+
+                Thread.sleep(1000);
+            }
+
+        } catch (InterruptedException e) {
+
+            System.out.println("Producer Thread Interrupted");
+        }
+    }
+}
+
+
+class Consumer extends Thread {
+
+    
+    private Buffer buffer;
+
+    
+    public Consumer() {
+
+    }
+
+   
+    public Consumer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    
+    public Buffer getBuffer() {
+        return buffer;
+    }
+
+   
+    public void setBuffer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+   
+    public void run() {
+
+        try {
+
+            for (int i = 1; i <= 5; i++) {
+
+                buffer.consume();
+
+                Thread.sleep(1000);
+            }
+
+        } catch (InterruptedException e) {
+
+            System.out.println("Consumer Thread Interrupted");
+        }
+    }
+}
+
+public class Driver {
+
+    public static void main(String[] args) {
+
+        
+        Buffer bufferObject = new Buffer();
+
+        
+        Producer producerObject = new Producer(bufferObject);
+
+        Consumer consumerObject = new Consumer(bufferObject);
+
+       
+        producerObject.start();
+
+        consumerObject.start();
+    }
+}
+
+===========================================
+
+import java.util.Scanner;
+import java.util.Locale;
+
+class MaxThread extends Thread {
+
+    private int[] numbers;
+    private int maximum;
+
+    public MaxThread() {
+
+    }
+
+    public MaxThread(int[] numbers) {
+        this.numbers = numbers;
+    }
+
+    public int getMaximum() {
+        return maximum;
+    }
+
+    public void setNumbers(int[] numbers) {
+        this.numbers = numbers;
+    }
+
+    @Override
+    public void run() {
+
+        if (numbers == null || numbers.length == 0) {
+
+            System.out.println("Array is Empty");
+
+            return;
+        }
+
+        maximum = numbers[0];
+
+        for (int i = 1; i < numbers.length; i++) {
+
+            if (numbers[i] > maximum) {
+
+                maximum = numbers[i];
+            }
+        }
+
+        System.out.println("Maximum Element : " + maximum);
+    }
+}
+
+class AverageThread extends Thread {
+
+    private int[] numbers;
+    private double average;
+
+    public AverageThread() {
+
+    }
+
+    public AverageThread(int[] numbers) {
+        this.numbers = numbers;
+    }
+
+    public double getAverage() {
+        return average;
+    }
+
+    public void setNumbers(int[] numbers) {
+        this.numbers = numbers;
+    }
+
+    @Override
+    public void run() {
+
+        if (numbers == null || numbers.length == 0) {
+
+            System.out.println("Array is Empty");
+
+            return;
+        }
+
+        int sum = 0;
+
+        for (int i = 0; i < numbers.length; i++) {
+
+            sum = sum + numbers[i];
+        }
+
+        average = (double) sum / numbers.length;
+
+        System.out.printf(Locale.US, "Average : %.4f\n", average);
+    }
+}
+
+public class Driver {
+
+    public static void main(String[] args) {
+
+        Scanner scannerObject = new Scanner(System.in);
+
+        System.out.print("Enter Number of Elements : ");
+
+        int size = scannerObject.nextInt();
+
+        if (size <= 0) {
+
+            System.out.println("Invalid Array Size");
+
+            return;
+        }
+
+        int[] numbers = new int[size];
+
+        System.out.println("Enter Array Elements : ");
+
+        for (int i = 0; i < size; i++) {
+
+            numbers[i] = scannerObject.nextInt();
+        }
+
+        MaxThread maxObject = new MaxThread(numbers);
+
+        AverageThread averageObject = new AverageThread(numbers);
+
+        maxObject.start();
+
+        averageObject.start();
+
+        try {
+
+            maxObject.join();
+
+            averageObject.join();
+
+        } catch (InterruptedException e) {
+
+            System.out.println("Main Thread Interrupted");
+        }
+
+        int maximum = maxObject.getMaximum();
+
+        double average = averageObject.getAverage();
+
+        double result = maximum / average;
+
+        System.out.printf(Locale.US, "Result (Max / Average) : %.4f\n", result);
+
+        scannerObject.close();
+    }
+}

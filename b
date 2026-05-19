@@ -105,7 +105,130 @@ int main()
 
     return 0;
 }
+===========================================================================
 
+#include <stdio.h>
+
+int board[20][20];
+
+int col[20];
+int leftDiag[40];
+int rightDiag[40];
+
+int n;
+int solutionCount = 0;
+
+
+void printSolution()
+{
+    int i, j;
+
+    printf("\nSolution %d:\n\n", solutionCount);
+
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            if(board[i][j] == 1)
+                printf(" Q ");
+            else
+                printf(" . ");
+        }
+
+        printf("\n");
+    }
+}
+
+
+void solveNQ(int row)
+{
+    int j;
+
+    
+    if(row == n)
+    {
+        solutionCount++;
+
+        printSolution();
+
+        return;
+    }
+
+    
+    for(j = 0; j < n; j++)
+    {
+        
+        if(col[j] == 0 &&
+           leftDiag[row - j + n - 1] == 0 &&
+           rightDiag[row + j] == 0)
+        {
+            
+            board[row][j] = 1;
+
+            
+            col[j] = 1;
+
+            leftDiag[row - j + n - 1] = 1;
+
+            rightDiag[row + j] = 1;
+
+            
+            solveNQ(row + 1);
+
+            
+            board[row][j] = 0;
+
+            col[j] = 0;
+
+            leftDiag[row - j + n - 1] = 0;
+
+            rightDiag[row + j] = 0;
+        }
+    }
+}
+
+
+int main()
+{
+    int i, j;
+
+    printf("Enter no. of queens: ");
+
+    scanf("%d", &n);
+
+
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            board[i][j] = 0;
+        }
+    }
+
+    
+    for(i = 0; i < 20; i++)
+    {
+        col[i] = 0;
+    }
+
+    for(i = 0; i < 40; i++)
+    {
+        leftDiag[i] = 0;
+
+        rightDiag[i] = 0;
+    }
+
+    
+    solveNQ(0);
+
+    
+    if(solutionCount == 0)
+    {
+        printf("Solution does not exist\n");
+    }
+
+    return 0;
+}
 =================================================================================
 
 #include <stdio.h>

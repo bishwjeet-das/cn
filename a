@@ -1,468 +1,251 @@
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics;
 
-class PingThread extends Thread {
+/*
+<applet code="SmileyApplet" width="400" height="400">
+</applet>
+*/
 
-    
-    private String message;
+public class SmileyApplet extends Applet {
 
-    
-    public PingThread() {
-        message = "Ping";
+    // Default Constructor
+    public SmileyApplet() {
     }
 
-    
-    public PingThread(String message) {
-        this.message = message;
+    // Draw Smiley Face
+    public void paint(Graphics g) {
+
+        // Face
+        g.setColor(Color.YELLOW);
+        g.fillOval(100, 100, 200, 200);
+
+        // Eyes
+        g.setColor(Color.BLACK);
+        g.fillOval(150, 150, 20, 20);
+        g.fillOval(230, 150, 20, 20);
+
+        // Smile
+        g.drawArc(150, 180, 100, 50, 180, 180);
+
+        // Nose
+        g.drawLine(200, 170, 190, 210);
+        g.drawLine(190, 210, 210, 210);
+    }
+}
+
+Save the file as:
+SmileyApplet.java
+Compile:
+javac SmileyApplet.java
+Run using Applet Viewer:
+appletviewer SmileyApplet.java
+
+=============================================================================
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Random;
+
+/*
+<applet code="ConcentricCirclesApplet" width="500" height="500">
+</applet>
+*/
+
+public class ConcentricCirclesApplet extends Applet {
+
+    // Default Constructor
+    public ConcentricCirclesApplet() {
     }
 
- 
-    public String getMessage() {
-        return message;
+    // Draw concentric circles
+    public void paint(Graphics g) {
+
+        Random random = new Random();
+
+        int centerX = 250;
+        int centerY = 250;
+
+        // Draw circles with radius difference of 10
+        for (int radius = 100; radius >= 10; radius -= 10) {
+
+            // Generate random color
+            Color randomColor = new Color(
+                    random.nextInt(256),
+                    random.nextInt(256),
+                    random.nextInt(256));
+
+            g.setColor(randomColor);
+
+            // Draw circle
+            g.drawOval(centerX - radius,
+                       centerY - radius,
+                       radius * 2,
+                       radius * 2);
+        }
+    }
+}
+
+Save the file as:
+ConcentricCirclesApplet.java
+Compile:
+javac ConcentricCirclesApplet.java
+Run using Applet Viewer:
+appletviewer ConcentricCirclesApplet.java
+
+=======================================================================================
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// Calculator Class
+class CalculatorFrame extends JFrame implements ActionListener {
+
+    private JTextField textField;
+
+    private double firstNumber;
+    private String operator;
+    private boolean startNewNumber;
+
+    // Default Constructor
+    public CalculatorFrame() {
+
+        firstNumber = 0;
+        operator = "";
+        startNewNumber = true;
+
+        // Frame settings
+        setTitle("Basic Calculator");
+        setSize(350, 450);
+        setLayout(new BorderLayout());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Text Field
+        textField = new JTextField("0");
+        textField.setFont(new Font("Arial", Font.BOLD, 28));
+        textField.setHorizontalAlignment(JTextField.RIGHT);
+        textField.setEditable(false);
+
+        add(textField, BorderLayout.NORTH);
+
+        // Button Panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 4, 5, 5));
+
+        // Buttons
+        String[] buttons = {
+                "7", "8", "9", "/",
+                "4", "5", "6", "*",
+                "1", "2", "3", "-",
+                "C", "0", "=", "+"
+        };
+
+        // Add Buttons
+        for (String text : buttons) {
+
+            JButton button = new JButton(text);
+            button.setFont(new Font("Arial", Font.BOLD, 22));
+            button.addActionListener(this);
+
+            panel.add(button);
+        }
+
+        add(panel, BorderLayout.CENTER);
+
+        setVisible(true);
     }
 
-   
-    public void setMessage(String message) {
-        this.message = message;
+    // Perform Actions
+    public void actionPerformed(ActionEvent e) {
+
+        String command = e.getActionCommand();
+
+        // Number Buttons
+        if (Character.isDigit(command.charAt(0))) {
+
+            if (startNewNumber) {
+                textField.setText(command);
+                startNewNumber = false;
+            } else {
+                textField.setText(textField.getText() + command);
+            }
+        }
+
+        // Decimal Point
+        else if (command.equals(".")) {
+
+            if (!textField.getText().contains(".")) {
+                textField.setText(textField.getText() + ".");
+            }
+        }
+
+        // Clear Button
+        else if (command.equals("C")) {
+
+            textField.setText("0");
+            firstNumber = 0;
+            operator = "";
+            startNewNumber = true;
+        }
+
+        // Equal Button
+        else if (command.equals("=")) {
+
+            double secondNumber = Double.parseDouble(textField.getText());
+            double result = calculate(firstNumber, secondNumber, operator);
+
+            textField.setText(String.valueOf(result));
+
+            firstNumber = result;
+            startNewNumber = true;
+        }
+
+        // Operator Buttons
+        else {
+
+            firstNumber = Double.parseDouble(textField.getText());
+            operator = command;
+            startNewNumber = true;
+        }
     }
 
-   
-    public void run() {
+    // Calculation Method
+    public double calculate(double num1, double num2, String op) {
 
-        try {
+        switch (op) {
 
-            while (true) {
+            case "+":
+                return num1 + num2;
 
-                
-                int randomSpace = (int) (Math.random() * 20);
+            case "-":
+                return num1 - num2;
 
-                for (int i = 0; i < randomSpace; i++) {
-                    System.out.print(" ");
+            case "*":
+                return num1 * num2;
+
+            case "/":
+
+                if (num2 != 0) {
+                    return num1 / num2;
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Division by zero not allowed!");
+                    return 0;
                 }
 
-                System.out.println(message);
-
-                
-                Thread.sleep(1000);
-            }
-
-        } catch (InterruptedException e) {
-
-            System.out.println("Ping Thread Interrupted");
+            default:
+                return num2;
         }
     }
 }
 
-
-class PongThread extends Thread {
-
-    
-    private String message;
-
-    
-    public PongThread() {
-        message = "PONG";
-    }
-
-    
-    public PongThread(String message) {
-        this.message = message;
-    }
-
-    
-    public String getMessage() {
-        return message;
-    }
-
-    
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    
-    public void run() {
-
-        try {
-
-            while (true) {
-
-               
-                int randomSpace = (int) (Math.random() * 20);
-
-                for (int i = 0; i < randomSpace; i++) {
-                    System.out.print(" ");
-                }
-
-                System.out.println(message);
-
-                
-                Thread.sleep(1000);
-            }
-
-        } catch (InterruptedException e) {
-
-            System.out.println("PONG Thread Interrupted");
-        }
-    }
-}
-
-
-public class p {
-
-    public static void main(String[] args) {
-
-        
-        PingThread pingObject = new PingThread();
-
-        PongThread pongObject = new PongThread();
-
-        
-        pingObject.start();
-
-        pongObject.start();
-    }
-}
-
-============================================================
-
-class Buffer {
-
-   
-    private int data;
-    private boolean available = false;
-
-    
-    public Buffer() {
-
-    }
-
-    
-    public Buffer(int data, boolean available) {
-        this.data = data;
-        this.available = available;
-    }
-
-    
-    public int getData() {
-        return data;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-   
-    public void setData(int data) {
-        this.data = data;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-   
-    public synchronized void produce(int value) {
-
-        try {
-
-            
-            while (available) {
-                wait();
-            }
-
-            data = value;
-
-            System.out.println("Produced : " + data);
-
-            available = true;
-
-          
-            notify();
-
-        } catch (InterruptedException e) {
-
-            System.out.println("Producer Interrupted");
-        }
-    }
-
-    
-    public synchronized void consume() {
-
-        try {
-
-            
-            while (!available) {
-                wait();
-            }
-
-            System.out.println("Consumed : " + data);
-
-            available = false;
-
-           
-            notify();
-
-        } catch (InterruptedException e) {
-
-            System.out.println("Consumer Interrupted");
-        }
-    }
-}
-
-
-class Producer extends Thread {
-
-   
-    private Buffer buffer;
-
-    
-    public Producer() {
-
-    }
-
-   
-    public Producer(Buffer buffer) {
-        this.buffer = buffer;
-    }
-
-   
-    public Buffer getBuffer() {
-        return buffer;
-    }
-
-   
-    public void setBuffer(Buffer buffer) {
-        this.buffer = buffer;
-    }
-
-    
-    public void run() {
-
-        try {
-
-            for (int i = 1; i <= 5; i++) {
-
-                buffer.produce(i);
-
-                Thread.sleep(1000);
-            }
-
-        } catch (InterruptedException e) {
-
-            System.out.println("Producer Thread Interrupted");
-        }
-    }
-}
-
-
-class Consumer extends Thread {
-
-    
-    private Buffer buffer;
-
-    
-    public Consumer() {
-
-    }
-
-   
-    public Consumer(Buffer buffer) {
-        this.buffer = buffer;
-    }
-
-    
-    public Buffer getBuffer() {
-        return buffer;
-    }
-
-   
-    public void setBuffer(Buffer buffer) {
-        this.buffer = buffer;
-    }
-
-   
-    public void run() {
-
-        try {
-
-            for (int i = 1; i <= 5; i++) {
-
-                buffer.consume();
-
-                Thread.sleep(1000);
-            }
-
-        } catch (InterruptedException e) {
-
-            System.out.println("Consumer Thread Interrupted");
-        }
-    }
-}
-
+// Driver Class
 public class Driver {
 
     public static void main(String[] args) {
 
-        
-        Buffer bufferObject = new Buffer();
-
-        
-        Producer producerObject = new Producer(bufferObject);
-
-        Consumer consumerObject = new Consumer(bufferObject);
-
-       
-        producerObject.start();
-
-        consumerObject.start();
-    }
-}
-
-===========================================
-
-import java.util.Scanner;
-import java.util.Locale;
-
-class MaxThread extends Thread {
-
-    private int[] numbers;
-    private int maximum;
-
-    public MaxThread() {
-
-    }
-
-    public MaxThread(int[] numbers) {
-        this.numbers = numbers;
-    }
-
-    public int getMaximum() {
-        return maximum;
-    }
-
-    public void setNumbers(int[] numbers) {
-        this.numbers = numbers;
-    }
-
-    @Override
-    public void run() {
-
-        if (numbers == null || numbers.length == 0) {
-
-            System.out.println("Array is Empty");
-
-            return;
-        }
-
-        maximum = numbers[0];
-
-        for (int i = 1; i < numbers.length; i++) {
-
-            if (numbers[i] > maximum) {
-
-                maximum = numbers[i];
-            }
-        }
-
-        System.out.println("Maximum Element : " + maximum);
-    }
-}
-
-class AverageThread extends Thread {
-
-    private int[] numbers;
-    private double average;
-
-    public AverageThread() {
-
-    }
-
-    public AverageThread(int[] numbers) {
-        this.numbers = numbers;
-    }
-
-    public double getAverage() {
-        return average;
-    }
-
-    public void setNumbers(int[] numbers) {
-        this.numbers = numbers;
-    }
-
-    @Override
-    public void run() {
-
-        if (numbers == null || numbers.length == 0) {
-
-            System.out.println("Array is Empty");
-
-            return;
-        }
-
-        int sum = 0;
-
-        for (int i = 0; i < numbers.length; i++) {
-
-            sum = sum + numbers[i];
-        }
-
-        average = (double) sum / numbers.length;
-
-        System.out.printf(Locale.US, "Average : %.4f\n", average);
-    }
-}
-
-public class Driver {
-
-    public static void main(String[] args) {
-
-        Scanner scannerObject = new Scanner(System.in);
-
-        System.out.print("Enter Number of Elements : ");
-
-        int size = scannerObject.nextInt();
-
-        if (size <= 0) {
-
-            System.out.println("Invalid Array Size");
-
-            return;
-        }
-
-        int[] numbers = new int[size];
-
-        System.out.println("Enter Array Elements : ");
-
-        for (int i = 0; i < size; i++) {
-
-            numbers[i] = scannerObject.nextInt();
-        }
-
-        MaxThread maxObject = new MaxThread(numbers);
-
-        AverageThread averageObject = new AverageThread(numbers);
-
-        maxObject.start();
-
-        averageObject.start();
-
-        try {
-
-            maxObject.join();
-
-            averageObject.join();
-
-        } catch (InterruptedException e) {
-
-            System.out.println("Main Thread Interrupted");
-        }
-
-        int maximum = maxObject.getMaximum();
-
-        double average = averageObject.getAverage();
-
-        double result = maximum / average;
-
-        System.out.printf(Locale.US, "Result (Max / Average) : %.4f\n", result);
-
-        scannerObject.close();
+        new CalculatorFrame();
     }
 }

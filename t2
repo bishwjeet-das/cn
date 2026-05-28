@@ -1,0 +1,93 @@
+#include <stdio.h>
+
+#define MAX 100
+
+int tree[2 * MAX];
+int size;
+
+void buildTournament(int arr[], int n)
+{
+    size = n;
+
+    for(int i = 0; i < n; i++)
+    {
+        tree[size + i] = arr[i];
+    }
+
+    for(int i = size - 1; i >= 1; i--)
+    {
+        if(tree[2 * i] > tree[2 * i + 1])
+            tree[i] = tree[2 * i];
+        else
+            tree[i] = tree[2 * i + 1];
+    }
+}
+
+int pqmaxdelete()
+{
+    int max = tree[1];
+
+    int index = 1;
+
+    while(index < size)
+    {
+        if(tree[2 * index] == max)
+            index = 2 * index;
+        else
+            index = 2 * index + 1;
+    }
+
+    tree[index] = -1;
+
+    index = index / 2;
+
+    while(index >= 1)
+    {
+        if(tree[2 * index] > tree[2 * index + 1])
+            tree[index] = tree[2 * index];
+        else
+            tree[index] = tree[2 * index + 1];
+
+        index = index / 2;
+    }
+
+    return max;
+}
+
+void tournamentSort(int arr[], int n)
+{
+    buildTournament(arr, n);
+
+    for(int i = n - 1; i >= 0; i--)
+    {
+        arr[i] = pqmaxdelete();
+    }
+}
+
+int main()
+{
+    int n;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int arr[MAX];
+
+    printf("Enter elements:\n");
+
+    for(int i = 0; i < n; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+
+    tournamentSort(arr, n);
+
+    printf("Sorted array:\n");
+
+    for(int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+
+    return 0;
+}

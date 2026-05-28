@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <math.h>
+
+struct Camp
+{
+    int level;
+    int camps;
+};
+
+void createMountain(int height, char name[])
+{
+    int levels;
+    int totalCamps = 0;
+    int havildar = 0;
+    int subedar = 0;
+    int captain = 0;
+    int major = 0;
+    int foodCamps = 0;
+
+    levels = height / 30;
+
+    printf("\n%s DETAILS\n", name);
+    printf("-------------------------\n");
+
+    for(int i = 0; i < levels; i++)
+    {
+        int campsAtLevel = pow(2, i);
+
+        totalCamps += campsAtLevel;
+
+        havildar += campsAtLevel * 2;
+        subedar += campsAtLevel;
+        captain += campsAtLevel;
+        major += 1;
+
+        if(i == levels - 1)
+        {
+            foodCamps = campsAtLevel;
+        }
+
+        printf("Level %d -> Camps = %d\n", i + 1, campsAtLevel);
+    }
+
+    printf("\nTotal Camps = %d\n", totalCamps);
+
+    printf("Total Personnel = %d\n",
+           havildar + subedar + captain + major);
+
+    printf("Havildar = %d\n", havildar);
+    printf("Subedar = %d\n", subedar);
+    printf("Captain/Lieutenant = %d\n", captain);
+    printf("Major = %d\n", major);
+
+    printf("Food Storage Base Camps = %d\n", foodCamps);
+}
+
+int totalCampsMountain(int height)
+{
+    int levels = height / 30;
+    int total = 0;
+
+    for(int i = 0; i < levels; i++)
+    {
+        total += pow(2, i);
+    }
+
+    return total;
+}
+
+int main()
+{
+    int mp1, mp2;
+
+    printf("Enter height of MP1: ");
+    scanf("%d", &mp1);
+
+    printf("Enter height of MP2: ");
+    scanf("%d", &mp2);
+
+    createMountain(mp1, "MP1");
+    createMountain(mp2, "MP2");
+
+    printf("\nCOMPARISON REPORT\n");
+    printf("-------------------------\n");
+
+    printf("Total Camps in MP1 = %d\n", totalCampsMountain(mp1));
+    printf("Total Camps in MP2 = %d\n", totalCampsMountain(mp2));
+
+    if(mp1 == mp2)
+    {
+        printf("MP1 and MP2 are exact subsets of each other\n");
+    }
+    else if(mp1 < mp2)
+    {
+        printf("MP1 is subset of MP2\n");
+    }
+    else
+    {
+        printf("MP2 is subset of MP1\n");
+    }
+
+    return 0;
+}
